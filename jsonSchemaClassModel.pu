@@ -26,7 +26,7 @@ hide empty members
 !define REF <color:green>$ref</color>
 !define ADVANCED color:gray
 
-title JSON Schema Class Model\n%date("yyyy MMM dd")
+title JSON Schema Class Model\n%date("dd MMM yyyy")
 
 class rootSchema ROOT {
   **$schema**: string

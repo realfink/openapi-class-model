@@ -32,7 +32,7 @@ hide empty members
 !define ANY //Any//
 !define MARKDOWN //Markdown//
 
-title OpenAPI (Swagger) 3 Spec Class Model\n%date("yyyy MMM dd")
+title OpenAPI (Swagger) 3 Spec Class Model\n%date("dd MMM yyyy")
 
 class "**openapi**" as openapi ROOT {
   * **openapi**: string
