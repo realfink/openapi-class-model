@@ -1,0 +1,365 @@
+' openapi-class-model
+' Copyright 2023 Akamai Technologies, Inc.
+
+' This work is licensed under the Creative Commons
+' Attribution-ShareAlike 4.0 International License.
+' To view a copy of this license, visit
+' http://creativecommons.org/licenses/by-sa/4.0/
+' or send a letter to Creative Commons, PO Box 1866,
+' Mountain View, CA 94042, USA.
+
+' Unless required by applicable law or agreed to in
+' writing, software distributed under the License is
+' distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+' CONDITIONS OF ANY KIND, either express or implied.
+' See the License for the specific language governing
+' permissions and limitations under the License.
+
+@startuml
+
+hide empty members
+
+!define ADVANCED color:gray
+!define ENUM <<enum>> #Khaki
+!define ROOT <<document root>> #STRATEGY
+!define REFERENCEABLE <<referenceable>> #TECHNOLOGY
+!define REFERENCE <color:green>$ref</color>
+!define EXTERNALDOCUMENTATION color:blue
+!define URL //URL//
+!define URI //URI//
+!define EMAIL //Email//
+!define SPDX //SPDX//
+!define ANY //Any//
+!define MARKDOWN //Markdown//
+
+title OpenAPI (Swagger) 3 Spec Class Model\n%date("yyyy MMM dd")
+
+class "**openapi**" as openapi ROOT {
+  * **openapi**: string
+  * **info**: info
+  **jsonSchemaDialect**: string URI
+  **servers**: server
+  {field} **paths**: paths
+  {field} <ADVANCED>**webhooks**: map(**{webhookName}**, pathItem)
+  **components**: components
+  **security**: securityRequirement
+  **tags**: tag[]
+  **externalDocs**: <EXTERNALDOCUMENTATION>externalDocumentation
+}
+
+class info {
+  * **title**: string
+  **summary**: string
+  **description**: string MARKDOWN
+  **termsOfService**: string URL
+  **contact**: contact
+  **license**: license
+  * **version**: string
+}
+
+class contact {
+  **name**: string
+  **url**: string URL
+  **email**: string EMAIL
+}
+
+class license {
+  **name**: string
+  **identifier**: string SPDX **OR**
+  **url**: string URL
+}
+
+class server {
+  * **url**: string URL
+  **description**: string MARKDOWN
+  {field} <ADVANCED>**variables**: map(**{serverVariableName}**, serverVariable)
+}
+
+class components {
+  {field} **schemas**: map(**{schemaName}**, schema)
+  {field} **responses**: map(**{responseName}**, response)
+  {field} **parameters**: map(**{parameterName}**, parameter)
+  {field} **examples**: map(**{exampleName}**, example)
+  {field} **requestBodies**: map(**{requestBodyName}**, requestBody)
+  {field} **headers**: map(**{headerName}**, header)
+  {field} **securitySchemes**: map(**{securitySchemeName}**, securityScheme)
+  {field} <ADVANCED>**links**: map(**{linkName}**, link)
+  {field} <ADVANCED>**callbacks**: map(**{callbackName}**, callback)
+  {field} **pathItems**: map(**{pathItemName}**, pathItem)
+
+}
+
+class "schema\nresponse\nparameter\nexample\nrequestBody\nheader\nlink\ncallback\npathItem" as referenceableClasses REFERENCEABLE {
+  //Everything but securitySchemes//
+  //can be <color:green>referenced</color> from other//
+  //classes using **REFERENCE**. This allows//
+  //reuse.//
+}
+
+class "REFERENCE" as reference {
+}
+
+class paths {
+  map(**/{path}**, pathItem | REFERENCE )
+  ....
+  **/{path}**
+  //  ex: /test/api//
+  //  ex: /test/item/{itemId}//
+}
+
+class pathItem REFERENCEABLE {
+  **summary**: string
+  **description**: string MARKDOWN
+  **get**: operation
+  **put**: operation
+  **post**: operation
+  **delete**: operation
+  **options**: operation
+  **head**: operation
+  **patch**: operation
+  **trace**: operation
+  **servers**: server
+  {field} **parameters**: ( parameter | REFERENCE )[]
+}
+
+class operation {
+  **tags**: string[]
+  **summary**: string
+  **description**: string MARKDOWN
+  **externalDocs**: <EXTERNALDOCUMENTATION>externalDocumentation
+  **operationId**: string //unique//
+  {field} **parameters**: ( parameter | REFERENCE )[]
+  **requestBody**: requestBody | REFERENCE
+  **responses**: responses
+  {field} <ADVANCED>**callbacks**: map(**{callbackName}**, callback)
+  **deprecated**: boolean
+  **security**: securityRequirement
+  **servers**: server
+}
+
+class "<EXTERNALDOCUMENTATION>externalDocumentation" as externalDocumentation {
+  **description**: string MARKDOWN
+  * **url**: string URL
+}
+
+class parameter REFERENCEABLE {
+  * **name**: string
+  * **in**: parameterIn
+  **description**: string MARKDOWN
+  **required**: boolean
+  **deprecated**: boolean
+  **allowEmptyValue**: boolean
+  **style**: style
+  **explode**: boolean
+  **allowReserved**: boolean
+  **schema**: schema | REFERENCE **OR**
+  {field} **content**: map(**{mediaTypeIdentifier}**, mediaType)
+  **example**: ANY **OR**
+  {field} **examples**: map(**{exampleName}**, example | REFERENCE )
+}
+
+enum "in" as parameterIn ENUM {
+  **query**
+  **header**
+  **path**
+  **cookie**
+}
+
+enum "style" as parameterStyle ENUM {
+  **matrix**
+  **label**
+  **form**
+  **simple**
+  **spaceDelimited**
+  **pipeDelimited**
+  **deepObject**
+}
+
+class requestBody REFERENCEABLE {
+  **description**: string MARKDOWN
+  {field} * **content**: map(**{mediaTypeIdentifier}**, mediaType)
+  **required**: boolean
+}
+
+class mediaType {
+  **{mediaTypeIdentifier}**
+  //  ex: application/json//
+  //  ex: text/plain//
+  //  ex: text/*//
+  ....
+  **schema**: schema | REFERENCE
+  **example**: ANY **OR**
+  {field} **examples**: map({**exampleName**}, example | REFERENCE )
+  <ADVANCED>**encoding**: encoding
+}
+
+class responses {
+  **default**: response | REFERENCE
+  {field} map(**{httpStatusCode}**, response | REFERENCE )
+}
+
+class response REFERENCEABLE {
+  **{httpStatusCode}**
+  //  ex: 200//
+  //  ex: 404//
+  ....
+  * **description**: string MARKDOWN
+  {field} **headers**: map(**{headerName}**, header | REFERENCE )
+  {field} **content**: map(**{mediaTypeIdentifier}**, mediaType)
+  <ADVANCED>**links**: map(**{linkName}**, link)
+}
+
+class example REFERENCEABLE {
+  **summary**: string
+  **description**: string MARKDOWN
+  **value**: ANY **OR**
+  **externalValue**: string URL
+}
+
+class header REFERENCEABLE {
+  **{headerName}**
+  //  ex: X-Acme-JWT-Authentication//
+  ....
+  **description**: string MARKDOWN
+  **required**: boolean
+  **deprecated**: boolean
+  **allowEmptyValue**: boolean
+  **style**: string
+  **explode**: boolean
+  **allowReserved**: boolean
+  **schema**: schema | REFERENCE **OR**
+  {field} **content**: map(**{mediaTypeIdentifier}**, mediaType)
+  **example**: ANY **OR**
+  {field} **examples**: map(**{exampleName}**, example | REFERENCE )
+}
+
+enum "style" as headerStyle ENUM {
+  **matrix**
+  **label**
+  **form**
+  **simple**
+  **spaceDelimited**
+  **pipeDelimited**
+  **deepObject**
+}
+
+class tag {
+  * **name**: string
+  **description**: string MARKDOWN
+  **externalDocs**: <EXTERNALDOCUMENTATION>externalDocumentation
+}
+
+class schema REFERENCEABLE {
+  //JSON Schema//
+  //  extended by//
+  <ADVANCED>**discriminator**: discriminator
+  <ADVANCED>**xml**: xml
+  **externalDocs**: <EXTERNALDOCUMENTATION>externalDocumentation
+}
+
+class securityScheme {
+  **{securitySchemeName}** 
+  ....
+  * **type**: securitySchemeType
+  **description**: string MARKDOWN
+  **name**: string
+  **in**: in
+  **scheme**: string
+  **bearerFormat**: string
+  **flows**: OAuthFlows
+  **openIdConnectUrl**: string URL
+}
+
+enum "in" as securityIn ENUM {
+  **query**
+  **header**
+  **cookie**
+}
+
+enum securitySchemeType ENUM {
+  **apiKey**
+  **http**
+  **mutualTLS**
+  **oauth2**
+  **openIdConnect**
+}
+
+class OAuthFlows {
+  **password**: OAuthFlow
+  **clientCredentials**: OAuthFlow
+  **authorizationCode**: OAuthFlow
+}
+
+class OAuthFlow { 
+  **authorizationUrl**: string URL
+  **tokenUrl**: string URL
+  **refreshUrl**: string URL
+  {field} **scopes**: map(**{scope}**, **{scopeDescription}**)
+}
+
+class securityRequirement {
+  {field} map(**{securitySchemeName}**, **{scope}**[])
+}
+
+legend
+  **Legend**
+  |<#STRATEGY> **document root** |
+  |<#TECHNOLOGY> **referenceable class** |
+  |<#Khaki> **enum**|
+  | <color:green>reference |
+  | <color:blue>externalDocumentation |
+  | ***** **required**: property |
+  | <ADVANCED>**advanced**: topic |
+end legend
+
+footer
+<img:https://i.creativecommons.org/l/by-sa/4.0/88x31.png>
+Copyright 2023 Akamai Technologies, Inc. (David Fink)
+openapi-class-model is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.
+Based on a work at https://github.com/realfink/openapi-class-model
+endfooter
+
+info *-- "0..1" contact
+info *-- "0..1" license
+
+openapi *-l- "0..1" info : "          "
+openapi *-- "0..1" server
+openapi *- "0..1" paths
+paths *- "0..n" pathItem
+openapi *--- "0..1" components
+pathItem *-- "0..n" operation
+pathItem *-- "0..n" parameter
+operation *- "0..n" parameter : "          "
+parameter::in .u.> parameterIn
+parameter::style .u.> parameterStyle
+operation *-- "0..1" requestBody
+requestBody *-- "0..n" mediaType
+operation *-- "1" responses
+responses *-- "0..n" response
+parameter *-- "0..1" schema
+parameter *--- "0..n" mediaType
+parameter *-- "0..n" example
+response *- "0..n" mediaType : "               "
+mediaType *-- "0..1" schema
+mediaType *-- "0..n" example
+response *-- "0..n" header
+header *- "0..1" schema
+header *-- "0..n" example
+header::style .l.> headerStyle
+pathItem *-- "0.1" server
+operation *-l- "0..1" server : "           "
+components *-- "0..n" securityScheme
+securityScheme::type ..> securitySchemeType
+securityScheme *-- "0..1" OAuthFlows
+OAuthFlows *-- "1..3" OAuthFlow
+openapi *-- "0..1" securityRequirement
+operation *-- "0..1" securityRequirement
+securityRequirement ..> "1..n" securityScheme
+securityScheme::in .r.> securityIn
+openapi *--- "0..n" tag
+operation::tags .> "0..n" tag
+components *-- referenceableClasses
+reference .up.> referenceableClasses
+reference -[hidden]down- externalDocumentation
+
+@enduml

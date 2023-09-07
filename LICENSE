@@ -1,0 +1,22 @@
+Creative Commons Legal Code
+
+Creative Commons Attribution-ShareAlike 4.0 International License
+
+openapi-class-model is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License. To view a copy of this license, visit http://creativecommons.org/licenses/by-sa/4.0/ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
+
+===========
+
+This project uses PlantUML, and the repository includes PlantUML.
+
+PlantUML is (C) Copyright 2009-2024, Arnaud Roques
+  
+PlantUML is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+https://www.gnu.org/licenses
+ 
+To see the full PlantUML license, run:
+
+java -jar ./plantuml-1.2023.10.jar -license
