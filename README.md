@@ -1,6 +1,6 @@
 # openapi-class-model
 
-This repository includes 2 class diagrams created with PlantUML, one describing the [OpenAPI 3 Class Model](./jsonSchemaClassModel.png), and one describing the [JSON Schema Class Model](./openapiClassModel.png).
+This repository includes 2 class diagrams created with [PlantUML](https://plantuml.com/), one describing the [OpenAPI 3 Class Model](./jsonSchemaClassModel.png), and one describing the [JSON Schema Class Model](./openapiClassModel.png).
 
 These diagrams are aids I created to describe the languages. I have simplified things where complicated to better describe the intent of the languages. If you want to code in the languages, reference the relevant documentation, and not these diagrams.
 
