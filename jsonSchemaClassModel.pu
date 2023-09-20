@@ -46,6 +46,7 @@ abstract class "SCHEMA" as schema ABSTRACT {
   **type**: type | type[]
   **enum**: //Any//[]
   **const**: //Any//
+  {field} **nullable**: boolean //(Not supported from OpenAPI 3.1)//
   <ADVANCED>**contentMediaType**: string
   <ADVANCED>**contentEncoding**: string
   <ADVANCED>**contentSchema**
@@ -61,7 +62,7 @@ enum "type" as schemaType ENUM {
   **object**
   **array**
   **boolean**
-  **null**
+  {field} **null** //(Supported from OpenAPI 3.1)//
 }
 
 class stringSchema {
@@ -91,6 +92,20 @@ enum "format" as formatType ENUM {
   **json-pointer** //ex: /books/1/author//
   **relative-json-pointer** //ex: 1/author//
   **regex** //ex: 192\.168\.1\.\d{1,3}//
+  .. //Additional format defined by OpenAPI// ..
+  **password** //A hint to UIs to obscure input//
+}
+
+enum "format" as numberFormatType ENUM {
+  //Number formats defined by OpenAPI//
+  **float**
+  **double**
+}
+
+enum "format" as integerFormatType ENUM {
+  //Integer formats defined by OpenAPI//
+  **int32**
+  **int64**
 }
 
 abstract class numericSchema ABSTRACT {
@@ -102,11 +117,11 @@ abstract class numericSchema ABSTRACT {
 }
 
 class numberSchema {
-
+  **format**: format
 }
 
 class integerSchema {
-
+  **format**: format
 }
 
 class objectSchema {
@@ -179,5 +194,7 @@ nullSchema -u-|> schema
 
 stringSchema::format .d.> formatType
 objectSchema *-d- properties
+integerSchema::format .d.> integerFormatType
+numberSchema::format .d.> numberFormatType
 
 @enduml
