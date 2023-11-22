@@ -313,7 +313,7 @@ legend
 end legend
 
 footer
-<img:https://i.creativecommons.org/l/by-sa/4.0/88x31.png>
+<img:https://licensebuttons.net/l/by-sa/4.0/88x31.png>
 Copyright 2023 Akamai Technologies, Inc. (David Fink)
 openapi-class-model is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.
 Based on a work at https://github.com/realfink/openapi-class-model
