@@ -30,17 +30,22 @@ hide empty members
 !define EMAIL //Email//
 !define SPDX //SPDX//
 !define ANY //Any//
+!define STRING //string//
+!define INTEGER //integer//
+!define NUMBER //number//
+!define BOOLEAN //boolean//
 !define MARKDOWN //Markdown//
+!define MAP //map//
 
 title OpenAPI (Swagger) 3 Spec Class Model\n%date("dd MMM yyyy")
 
 class "**openapi**" as openapi ROOT {
-  * **openapi**: string
+  * **openapi**: STRING
   * **info**: info
-  **jsonSchemaDialect**: string URI
+  **jsonSchemaDialect**: STRING URI
   **servers**: server
   {field} **paths**: paths
-  {field} <ADVANCED>**webhooks**: map(**{webhookName}**, pathItem)
+  {field} <ADVANCED>**webhooks**: MAP(**{webhookName}**, pathItem)
   **components**: components
   **security**: securityRequirement
   **tags**: tag[]
@@ -48,44 +53,44 @@ class "**openapi**" as openapi ROOT {
 }
 
 class info {
-  * **title**: string
-  **summary**: string
-  **description**: string MARKDOWN
-  **termsOfService**: string URL
+  * **title**: STRING
+  **summary**: STRING
+  **description**: STRING MARKDOWN
+  **termsOfService**: STRING URL
   **contact**: contact
   **license**: license
-  * **version**: string
+  * **version**: STRING
 }
 
 class contact {
-  **name**: string
-  **url**: string URL
-  **email**: string EMAIL
+  **name**: STRING
+  **url**: STRING URL
+  **email**: STRING EMAIL
 }
 
 class license {
-  **name**: string
-  **identifier**: string SPDX **OR**
-  **url**: string URL
+  **name**: STRING
+  **identifier**: STRING SPDX **OR**
+  **url**: STRING URL
 }
 
 class server {
-  * **url**: string URL
-  **description**: string MARKDOWN
-  {field} <ADVANCED>**variables**: map(**{serverVariableName}**, serverVariable)
+  * **url**: STRING URL
+  **description**: STRING MARKDOWN
+  {field} <ADVANCED>**variables**: MAP(**{serverVariableName}**, serverVariable)
 }
 
 class components {
-  {field} **schemas**: map(**{schemaName}**, schema)
-  {field} **responses**: map(**{responseName}**, response)
-  {field} **parameters**: map(**{parameterName}**, parameter)
-  {field} **examples**: map(**{exampleName}**, example)
-  {field} **requestBodies**: map(**{requestBodyName}**, requestBody)
-  {field} **headers**: map(**{headerName}**, header)
-  {field} **securitySchemes**: map(**{securitySchemeName}**, securityScheme)
-  {field} <ADVANCED>**links**: map(**{linkName}**, link)
-  {field} <ADVANCED>**callbacks**: map(**{callbackName}**, callback)
-  {field} **pathItems**: map(**{pathItemName}**, pathItem)
+  {field} **schemas**: MAP(**{schemaName}**, schema)
+  {field} **responses**: MAP(**{responseName}**, response)
+  {field} **parameters**: MAP(**{parameterName}**, parameter)
+  {field} **examples**: MAP(**{exampleName}**, example)
+  {field} **requestBodies**: MAP(**{requestBodyName}**, requestBody)
+  {field} **headers**: MAP(**{headerName}**, header)
+  {field} **securitySchemes**: MAP(**{securitySchemeName}**, securityScheme)
+  {field} <ADVANCED>**links**: MAP(**{linkName}**, link)
+  {field} <ADVANCED>**callbacks**: MAP(**{callbackName}**, callback)
+  {field} **pathItems**: MAP(**{pathItemName}**, pathItem)
 
 }
 
@@ -100,7 +105,7 @@ class "REFERENCE" as reference {
 }
 
 class paths {
-  map(**/{path}**, pathItem | REFERENCE )
+  MAP(**/{path}**, pathItem | REFERENCE )
   ....
   **/{path}**
   //  ex: /test/api//
@@ -108,8 +113,8 @@ class paths {
 }
 
 class pathItem REFERENCEABLE {
-  **summary**: string
-  **description**: string MARKDOWN
+  **summary**: STRING
+  **description**: STRING MARKDOWN
   **get**: operation
   **put**: operation
   **post**: operation
@@ -123,39 +128,39 @@ class pathItem REFERENCEABLE {
 }
 
 class operation {
-  **tags**: string[]
-  **summary**: string
-  **description**: string MARKDOWN
+  **tags**: STRING[]
+  **summary**: STRING
+  **description**: STRING MARKDOWN
   **externalDocs**: <EXTERNALDOCUMENTATION>externalDocumentation
-  **operationId**: string //unique//
+  **operationId**: STRING //unique//
   {field} **parameters**: ( parameter | REFERENCE )[]
   **requestBody**: requestBody | REFERENCE
   **responses**: responses
-  {field} <ADVANCED>**callbacks**: map(**{callbackName}**, callback)
-  **deprecated**: boolean
+  {field} <ADVANCED>**callbacks**: MAP(**{callbackName}**, callback)
+  **deprecated**: BOOLEAN
   **security**: securityRequirement
   **servers**: server
 }
 
 class "<EXTERNALDOCUMENTATION>externalDocumentation" as externalDocumentation {
-  **description**: string MARKDOWN
-  * **url**: string URL
+  **description**: STRING MARKDOWN
+  * **url**: STRING URL
 }
 
 class parameter REFERENCEABLE {
-  * **name**: string
+  * **name**: STRING
   * **in**: parameterIn
-  **description**: string MARKDOWN
-  **required**: boolean
-  **deprecated**: boolean
-  **allowEmptyValue**: boolean
+  **description**: STRING MARKDOWN
+  **required**: BOOLEAN
+  **deprecated**: BOOLEAN
+  **allowEmptyValue**: BOOLEAN
   **style**: style
-  **explode**: boolean
-  **allowReserved**: boolean
+  **explode**: BOOLEAN
+  **allowReserved**: BOOLEAN
   **schema**: schema | REFERENCE **OR**
-  {field} **content**: map(**{mediaTypeIdentifier}**, mediaType)
+  {field} **content**: MAP(**{mediaTypeIdentifier}**, mediaType)
   **example**: ANY **OR**
-  {field} **examples**: map(**{exampleName}**, example | REFERENCE )
+  {field} **examples**: MAP(**{exampleName}**, example | REFERENCE )
 }
 
 enum "in" as parameterIn ENUM {
@@ -176,9 +181,9 @@ enum "style" as parameterStyle ENUM {
 }
 
 class requestBody REFERENCEABLE {
-  **description**: string MARKDOWN
-  {field} * **content**: map(**{mediaTypeIdentifier}**, mediaType)
-  **required**: boolean
+  **description**: STRING MARKDOWN
+  {field} * **content**: MAP(**{mediaTypeIdentifier}**, mediaType)
+  **required**: BOOLEAN
 }
 
 class mediaType {
@@ -189,13 +194,13 @@ class mediaType {
   ....
   **schema**: schema | REFERENCE
   **example**: ANY **OR**
-  {field} **examples**: map({**exampleName**}, example | REFERENCE )
+  {field} **examples**: MAP({**exampleName**}, example | REFERENCE )
   <ADVANCED>**encoding**: encoding
 }
 
 class responses {
   **default**: response | REFERENCE
-  {field} map(**{httpStatusCode}**, response | REFERENCE )
+  {field} MAP(**{httpStatusCode}**, response | REFERENCE )
 }
 
 class response REFERENCEABLE {
@@ -203,34 +208,34 @@ class response REFERENCEABLE {
   //  ex: 200//
   //  ex: 404//
   ....
-  * **description**: string MARKDOWN
-  {field} **headers**: map(**{headerName}**, header | REFERENCE )
-  {field} **content**: map(**{mediaTypeIdentifier}**, mediaType)
-  <ADVANCED>**links**: map(**{linkName}**, link)
+  * **description**: STRING MARKDOWN
+  {field} **headers**: MAP(**{headerName}**, header | REFERENCE )
+  {field} **content**: MAP(**{mediaTypeIdentifier}**, mediaType)
+  <ADVANCED>**links**: MAP(**{linkName}**, link)
 }
 
 class example REFERENCEABLE {
-  **summary**: string
-  **description**: string MARKDOWN
+  **summary**: STRING
+  **description**: STRING MARKDOWN
   **value**: ANY **OR**
-  **externalValue**: string URL
+  **externalValue**: STRING URL
 }
 
 class header REFERENCEABLE {
   **{headerName}**
   //  ex: X-Acme-JWT-Authentication//
   ....
-  **description**: string MARKDOWN
-  **required**: boolean
-  **deprecated**: boolean
-  **allowEmptyValue**: boolean
-  **style**: string
-  **explode**: boolean
-  **allowReserved**: boolean
+  **description**: STRING MARKDOWN
+  **required**: BOOLEAN
+  **deprecated**: BOOLEAN
+  **allowEmptyValue**: BOOLEAN
+  **style**: STRING
+  **explode**: BOOLEAN
+  **allowReserved**: BOOLEAN
   **schema**: schema | REFERENCE **OR**
-  {field} **content**: map(**{mediaTypeIdentifier}**, mediaType)
+  {field} **content**: MAP(**{mediaTypeIdentifier}**, mediaType)
   **example**: ANY **OR**
-  {field} **examples**: map(**{exampleName}**, example | REFERENCE )
+  {field} **examples**: MAP(**{exampleName}**, example | REFERENCE )
 }
 
 enum "style" as headerStyle ENUM {
@@ -244,8 +249,8 @@ enum "style" as headerStyle ENUM {
 }
 
 class tag {
-  * **name**: string
-  **description**: string MARKDOWN
+  * **name**: STRING
+  **description**: STRING MARKDOWN
   **externalDocs**: <EXTERNALDOCUMENTATION>externalDocumentation
 }
 
@@ -261,13 +266,13 @@ class securityScheme {
   **{securitySchemeName}** 
   ....
   * **type**: securitySchemeType
-  **description**: string MARKDOWN
-  **name**: string
+  **description**: STRING MARKDOWN
+  **name**: STRING
   **in**: in
-  **scheme**: string
-  **bearerFormat**: string
+  **scheme**: STRING
+  **bearerFormat**: STRING
   **flows**: OAuthFlows
-  **openIdConnectUrl**: string URL
+  **openIdConnectUrl**: STRING URL
 }
 
 enum "in" as securityIn ENUM {
@@ -291,14 +296,14 @@ class OAuthFlows {
 }
 
 class OAuthFlow { 
-  **authorizationUrl**: string URL
-  **tokenUrl**: string URL
-  **refreshUrl**: string URL
-  {field} **scopes**: map(**{scope}**, **{scopeDescription}**)
+  **authorizationUrl**: STRING URL
+  **tokenUrl**: STRING URL
+  **refreshUrl**: STRING URL
+  {field} **scopes**: MAP(**{scope}**, **{scopeDescription}**)
 }
 
 class securityRequirement {
-  {field} map(**{securitySchemeName}**, **{scope}**[])
+  {field} MAP(**{securitySchemeName}**, **{scope}**[])
 }
 
 legend
